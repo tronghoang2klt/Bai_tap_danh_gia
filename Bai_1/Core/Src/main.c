@@ -72,12 +72,16 @@ void StartDefaultTask(void *argument);
 void StartTask02(void *argument);
 
 /* USER CODE BEGIN PFP */
-
+/*int __io_putchar(int ch)
+{
+	HAL_UART_Transmit(&huart2,(uint8_t *)&ch,1,0x10);
+	return ch;
+}*/
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-float nd=0.0;
+float lux=0.0;
 /* USER CODE END 0 */
 
 /**
@@ -269,7 +273,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -327,7 +331,7 @@ void StartDefaultTask(void *argument)
 			i++;
 			osDelay(50);
 		}
-		nd=(float)(tong)*3.3*100/4095/10;// 10mV/1oC, 12bit
+		lux=250/((float)(tong)/10*3.3/4095);// cong thuc tinh lux
     osDelay(1000);
   }
   /* USER CODE END 5 */
@@ -351,8 +355,9 @@ void StartTask02(void *argument)
 		{
 			str[i]=0;
 		}
-		sprintf(str,"nhiet do:%f\n",nd);
+		sprintf(str,"anh sang:%f lux\n",lux);
 		HAL_UART_Transmit(&huart2,(uint8_t *)str,sizeof(str)-1,100);
+		//printf(" nhiet do: %f\n",nd);
     osDelay(3000);
   }
   /* USER CODE END StartTask02 */
