@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->customPlot->addGraph();
     ui->customPlot->graph(0)->setScatterStyle(QCPScatterStyle::ssCircle);
     ui->customPlot->graph(0)->setLineStyle(QCPGraph::lsLine);
-    ui->customPlot->xAxis->setLabel("time");
-    ui->customPlot->yAxis->setLabel("lux");
+    ui->customPlot->xAxis->setLabel("time (s)");
+    ui->customPlot->yAxis->setLabel(" cuong do anh sang (lux)");
     ui->customPlot->xAxis->setRange(0,300);
     ui->customPlot->yAxis->setRange(0,300);
     ui->customPlot->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom| QCP::iSelectPlottables);
@@ -63,26 +63,21 @@ void MainWindow::plot()
 
 void MainWindow::serialport_read()
 {
-
-    QStringList bufferSplit = data_string.split("\n");
-    if(bufferSplit.length()<2)
+    buffer=serialPort->readLine();
+    data_string+=QString::fromStdString(buffer.toStdString());
+    if(data_string.contains("\n"))//doc het du lieu
     {
-        buffer=serialPort->readAll();
-        data_string+=QString::fromStdString(buffer.toStdString());
-    }
-    else
-    {
-        ui->pteReceive->insertPlainText(bufferSplit[0]);
-        // show data read ok! eg: 96,80,94
-        qDebug() << "bufferSplit[0]:" << bufferSplit[0];
 
-        giatri=QString(bufferSplit[0]).toDouble();// not working
-        //giatri++;
+        index=data_string.lastIndexOf("d",data_string.length());//tim vi tri cua chu d
+        data_string.remove(0,index+1);//xoa tu dau den vi tri chu d
+        ui->pteReceive->insertPlainText(data_string);//hien thi du lieu nhan lux
+        data_string.remove("\n");//xoa ki tu \n
+        giatri=data_string.toDouble();//chuyen doi thanh gia tri double
         time=time+1;
         addPoint(time,giatri);
         plot();
         data_string="";
-        bufferSplit={""};
+        index=0;
     }
 }
 

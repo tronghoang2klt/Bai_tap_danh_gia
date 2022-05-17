@@ -24,7 +24,6 @@ private:
     Ui::MainWindow *ui;
     QVector<double> qv_x,qv_y;
     double time=0;
-    QChar charBuffer[6];
     double giatri=10.0;
     int index=0;
     QByteArray buffer;
