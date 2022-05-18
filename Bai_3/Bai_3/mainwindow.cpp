@@ -67,8 +67,8 @@ void MainWindow::serialport_read()
     data_string+=QString::fromStdString(buffer.toStdString());
     if(data_string.contains("\n"))//doc het du lieu
     {
-
-        index=data_string.lastIndexOf("d",data_string.length());//tim vi tri cua chu d
+        // du lieu nhan dc co dang "d"+"gia tri lux"+"\n"
+        index=data_string.lastIndexOf("d",data_string.length());//tim vi tri cua chu d, d la vi tri bat dau
         data_string.remove(0,index+1);//xoa tu dau den vi tri chu d
         ui->pteReceive->insertPlainText(data_string);//hien thi du lieu nhan lux
         data_string.remove("\n");//xoa ki tu \n
